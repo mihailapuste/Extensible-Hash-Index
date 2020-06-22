@@ -6,21 +6,16 @@
 
 class Bucket
 {
-    private:
-        int local_depth; 
-        int max_n_keys; // the max number of keys in an array - the size of the bucket.
-        int *key_array; // pointer to the array of keys.
-        int n_keys; // keeps track of number of keys currently in bucket.
+   
 
     public:
 
-        Bucket(int array_size); // Constructor
+        Bucket(int max_array_size, int local_depth); // Constructor
         Bucket( const Bucket& bp ); // Copy constructor.
         ~Bucket(); // Destructor
     
-
         /* Insertion/removal functions */
-        void insert( int key );
+        bool insert( int key );
         bool remove( int key ); 
 
         /* Search functions */
@@ -29,4 +24,14 @@ class Bucket
         /* Print functions */
         void print();
 
+        /* Public variables */
+        int l_depth; // local depth
+       
+
+    private:
+
+        /* Private variables */
+        int *key_array; // pointer to the array of keys.
+        int max_n_keys; // the max number of keys in an array - the size of the bucket.
+        int n_keys; // keeps track of number of keys currently in bucket.
 };
