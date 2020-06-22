@@ -6,11 +6,11 @@ using namespace std;
 
 int main() {
 
-Bucket * b1 = new Bucket(5);
+Bucket * b1 = new Bucket(5, 20);
 
-int a[] = {102, 223, 13, 182, 990, 12, 19};
+int a[] = {1202, 102, 232, 102, 102, 12, 19};
 
-int searchfor = 12;
+int key = 102;
 
 for(int i=0; i < (sizeof(a)/sizeof(*a)); i++){
     b1->insert(a[i]);
@@ -18,7 +18,10 @@ for(int i=0; i < (sizeof(a)/sizeof(*a)); i++){
 
 b1->print();
 
-cout << b1->find(searchfor) << endl;
+cout << b1->remove(key) << endl;
+
+b1->print();
+
 
 
 delete b1;
