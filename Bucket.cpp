@@ -6,6 +6,7 @@
 using namespace std;
 
 Bucket::Bucket(int max_array_size, int local_depth){ // constructor
+    full = false;
     max_n_keys = max_array_size; // set the max array/bucket size.
     key_array = new int[max_n_keys - 1]; // point key_array pointer to newly initialized integer array for bucket.
     for (int i=0; i<max_n_keys; i++) {
@@ -30,6 +31,7 @@ bool Bucket::insert(int key){
             }
         }
     } 
+    full = true;
     return false; // split bucket + create new + inc local depth & (or) increase directory size
 }
 
@@ -54,7 +56,7 @@ bool Bucket::remove(int key){
 }
 
 void Bucket::print(){
-    cout << "max size: " << max_n_keys << endl;
+    // cout << "max size: " << max_n_keys << endl;
     cout << "[";
     for(int i=0; i < max_n_keys; i++){
         if(key_array[i] < 0) cout << "-";
