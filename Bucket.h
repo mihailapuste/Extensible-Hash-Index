@@ -37,5 +37,5 @@ class Bucket
         /* Private variables */
         int *key_array; // pointer to the array of keys.
         int max_n_keys; // the max number of keys in an array - the size of the bucket.
-        
+        void reorganize();
 };

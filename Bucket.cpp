@@ -46,15 +46,36 @@ bool Bucket::find(int key){
 
 bool Bucket::remove(int key){
      if(find(key)){
+        full = false;
         for(int i=0; i < max_n_keys; i++){
             if(key == key_array[i]){
                 key_array[i] = -1;
                 n_keys--;
             }
         }
+        reorganize();
         return true;
      } 
      else return false; // if nothing is found, return false
+}
+
+void Bucket::reorganize(){
+    int temp_array[max_n_keys - 1];
+    int n_keys_found = 0;
+    for (int i=0; i<max_n_keys; i++) {
+        temp_array[i] = -1;    // Initialize all elements to -1.
+    }
+    for(int i=0; i < max_n_keys; i++){
+        if(key_array[i] > -1){
+            temp_array[n_keys_found] = key_array[i];
+            n_keys_found++;
+        }
+    }
+    for (int i=0; i<max_n_keys; i++) {
+        key_array[i] = temp_array[i];    // Initialize all elements to -1.
+    }
+    return;
+
 }
 
 int Bucket::pop(){

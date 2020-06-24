@@ -1,6 +1,7 @@
 #include <cstring>
 #include <iostream>
 #include <time.h>
+#include <cmath>
 #include "ExtensibleHashTable.h"
 #include "Bucket.h"
 
@@ -8,21 +9,29 @@ using namespace std;
 
 int main() {
 
-    int a[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 , 14, 15, 16, 17, 18, 19 ,20, 21, 22, 23, 24, 25, 26, 27, 28};
-    int key = 102;
     srand( time(NULL) );
+    int N_INSERTIONS = 20;
+    int BUCKET_SIZE = 6;
+    int searchforkey = 0;
 
-    ExtensibleHashTable * T1 = new ExtensibleHashTable();
-   
-    for(int i=0; i < 20; i++){
-        int random_insertion = (rand() % 100) + 1;
-        cout <<random_insertion <<" ";
+    ExtensibleHashTable * T1 = new ExtensibleHashTable(BUCKET_SIZE);
+
+    cout << endl << "Inserting: " << N_INSERTIONS << " random keys :" << endl;
+
+    for(int i=0; i < N_INSERTIONS; i++){
+        int random_insertion = (rand() % 30) + 1;
         T1->insert(random_insertion);
     }
 
     T1->print();
 
-  
+    cout << "Remove a key: ";
+    
+    cin >> searchforkey; 
+
+    cout << endl << "Removing: " <<  searchforkey << " ... status " << T1->remove(searchforkey) << endl;
+
+    T1->print();
 
     delete T1;
     return 0;   
