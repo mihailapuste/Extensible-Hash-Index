@@ -11,8 +11,10 @@ Bucket *buckets[0];
 
 ExtensibleHashTable::ExtensibleHashTable(int b_size){ // constructor
     bucket_size = b_size;
-    global_depth = 1; 
+    global_depth = 0; 
     n_buckets = 0;
+
+    increase_directory(); // initialize global depth to 1, creates entry array.
 }
 
 ExtensibleHashTable::~ExtensibleHashTable(){ // Destructor
@@ -54,7 +56,7 @@ void ExtensibleHashTable::insert(int key , int local_depth){
 
             // increase size of directory & global depth, and split bucket.
             cout << endl <<  "--SPLITTING BUCKET [" << hash_function(key) << "]--"<< endl;
-            global_depth++;
+            increase_directory();
             split_buckets(key);
             break;
 
@@ -62,6 +64,20 @@ void ExtensibleHashTable::insert(int key , int local_depth){
   
     return;
 
+}
+
+void ExtensibleHashTable::increase_directory(){
+    global_depth++;
+
+    size_t newSize = pow(2, global_depth);
+    int* newArr = new int[newSize];
+
+    memcpy( newArr, entries, n_buckets * sizeof(int) );
+
+    delete [] entries;
+    entries = newArr;
+
+    return;
 }
 
 void ExtensibleHashTable::split_buckets(int key){
@@ -114,12 +130,14 @@ int ExtensibleHashTable::insertion_scenario(int key){
 
 void ExtensibleHashTable::insert_key(int key){
     int hash_value = hash_function(key);
+    // cout<< hash_value << endl;
     buckets[hash_value]->insert(key);
 }
 
 void ExtensibleHashTable::create_new_bucket(int key, int local_depth){ 
     int hash_value = hash_function(key);
     buckets[hash_value] = new Bucket(bucket_size,local_depth );
+    entries[n_buckets] = hash_value;
     n_buckets++;
 }
 
@@ -129,7 +147,7 @@ void ExtensibleHashTable::create_new_bucket(int key, int local_depth){
 int ExtensibleHashTable::hash_function(int key){ 
     // key --> [binary] --> [extract bucket value] --> [convert to decimal] --> directory bucket index
    
-        int binary_key[64]; // array of integers representing the binary string of the key
+        int binary_key[64] = {0}; // array of integers representing the binary string of the key
         int hash_value = 0; // final decimal value after refercing global depth
         
         for(int i = 0; key > 0; i++){ // decimal to binary
@@ -150,8 +168,12 @@ int ExtensibleHashTable::hash_function(int key){
 void ExtensibleHashTable::print(){ 
     cout << endl;
     for(int i=0; i < pow(2, global_depth); i++){
-      cout << i << ": " << buckets[i] << " --> ";
-      buckets[i]->print_keys();
-      cout << endl;
+        cout << i << ": ";
+        if(buckets[i]){
+            cout << buckets[i] << " --> ";
+            buckets[i]->print_keys();
+            
+        }
+        cout << endl;
     }
 }

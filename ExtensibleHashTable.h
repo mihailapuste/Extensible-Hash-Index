@@ -8,12 +8,13 @@ class ExtensibleHashTable
 {
   private:
     int n_buckets;
+    int *entries;
     int hash_function(int key); // takes an input key as an input, calculates and returns hash index value (int) using global depth.
     void create_new_bucket(int key, int local_depth=1);
     void insert_key(int key); // inserts key in bucket. Helper function for insert, to reduce redudant code.
     void split_buckets(int key); // splits buckets, re-distibutes values, increments local depth.
     int insertion_scenario(int key); // determines what sort of processes must occur for insertion to happen successfully
-
+    void increase_directory();
   public:
     /* Constructors and Destructor */
     ExtensibleHashTable(int b_size = 4); // Constructor, default bucket size is 4 keys. 
