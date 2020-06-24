@@ -89,7 +89,6 @@ int Bucket::pop(){
 }
 
 void Bucket::print_keys(){
-    // cout << "max size: " << max_n_keys << endl;
     cout << "[";
     for(int i=0; i < max_n_keys; i++){
         if(key_array[i] < 0) cout << "-";

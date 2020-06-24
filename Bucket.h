@@ -6,8 +6,6 @@
 
 class Bucket
 {
-   
-
     public:
         Bucket() {}; // default constructor
         Bucket(int max_array_size, int local_depth=1, int index_value = 0); // Constructor

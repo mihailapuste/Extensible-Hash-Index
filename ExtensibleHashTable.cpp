@@ -13,7 +13,6 @@ ExtensibleHashTable::ExtensibleHashTable(int b_size){ // constructor
     bucket_size = b_size;
     global_depth = 0; 
     n_buckets = 0;
-    local_depth = 1;
     increase_directory(); // initialize global depth to 1, creates entry array.
 }
 
@@ -45,7 +44,6 @@ void ExtensibleHashTable::insert(int key){
 }
 
 void ExtensibleHashTable::print(){ 
-    cout << endl;
     for(int i=0; i < pow(2, global_depth); i++){
         cout << i << ": " << buckets[i] << " --> ";
         if(i == buckets[i]->index){
@@ -59,14 +57,11 @@ void ExtensibleHashTable::print(){
 void ExtensibleHashTable::insert_with_local_depth(int key , int local_depth){ 
     
     int scenario = insertion_scenario(key);
-
-    // cout << "scenario "<< scenario << ": key: "<< key << " -> ["<<hash_function(key)<<"]"<<endl;
     
     switch (scenario) {
         case 0: /* SCENARIO [0]: No bucket found for hash value */
             
             // create a new bucket using at index of hash value.
-            // cout << endl <<  "--CREATING BUCKET [" << hash_function(key) << "] WITH LOCAL DEPTH: ["<<local_depth<<"]--"<< endl;
             create_new_bucket(key, local_depth);
             insert_key(key);
             break; 
@@ -80,21 +75,18 @@ void ExtensibleHashTable::insert_with_local_depth(int key , int local_depth){
         case 2: /* SCENARIO [2]: Local depth is less than global depth. */
 
             // split bucket without increasing directory size.
-            // cout << endl << "--SPLITTING BUCKET [" << hash_function(key) << "]--"<< endl;
             split_buckets(key);
             break;
 
         case 3: /* SCENARIO [3]: Local depth is equal to global depth. */
 
             // increase size of directory & global depth, and split bucket.
-            // cout << endl <<  "--SPLITTING BUCKET [" << hash_function(key) << "]--"<< endl;
             increase_directory();
             split_buckets(key);
             break;
         
         case 4: /* SCENARIO [4]: Directory of hash value points to bucket of other directory, but does not have its own bucket */
             
-            // cout << endl <<  "--CREATING BUCKET [" << hash_function(key) << "] WITH LOCAL DEPTH: ["<<local_depth<<"]--"<< endl;
             create_new_bucket(key, local_depth);
             insert_key(key);
             break;
@@ -109,13 +101,10 @@ void ExtensibleHashTable::increase_directory(){
     global_depth++;
     int index_size = pow(2, global_depth);
     int prev_index_size = index_size/2;
-    // cout << endl <<  "--INCREASING DIRECTORY FROM " << prev_index_size << " --> "<< index_size << endl;
     
     for(int i=0; i < prev_index_size; i++){ // dont do for index = 1
-        //  cout << i << ": " << i+prev_index_size <<endl;
          buckets[i+prev_index_size] = buckets[i];
     }
-    // cout << endl;
 
     return;
 }
@@ -174,7 +163,6 @@ int ExtensibleHashTable::insertion_scenario(int key){
 
 void ExtensibleHashTable::insert_key(int key){
     int hash_value = hash_function(key);
-    // cout<< hash_value << endl;
     buckets[hash_value]->insert(key);
 }
 
@@ -187,18 +175,18 @@ void ExtensibleHashTable::create_new_bucket(int key, int local_depth){
 int ExtensibleHashTable::hash_function(int key){ 
     // key --> [binary] --> [extract bucket value] --> [convert to decimal] --> directory bucket index
    
-        int binary_key[64] = {0}; // array of integers representing the binary string of the key
-        int hash_value = 0; // final decimal value after refercing global depth
-        
-        for(int i = 0; key > 0; i++){ // decimal to binary
-            binary_key[i] = key%2;  
-            key = key/2;  
-        }    
-
-        for(int i = 0; i < global_depth; i++){ // binary to decimal referencing global depth
-            hash_value += binary_key[i] * pow(2, i);
-        }
+    int binary_key[64] = {0}; // array of integers representing the binary string of the key
+    int hash_value = 0; // final decimal value after refercing global depth
     
-        return hash_value;    
+    for(int i = 0; key > 0; i++){ // decimal to binary
+        binary_key[i] = key%2;  
+        key = key/2;  
+    }    
+
+    for(int i = 0; i < global_depth; i++){ // binary to decimal referencing global depth
+        hash_value += binary_key[i] * pow(2, i);
+    }
+
+    return hash_value;    
    
 }
