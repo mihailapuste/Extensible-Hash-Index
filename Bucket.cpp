@@ -26,13 +26,14 @@ bool Bucket::insert(int key){
         for(int i=0; i < max_n_keys; i++){
             if(key_array[i] == -1){ // if empty spot in bucket found.
                 key_array[i] = key; // insert key in empty spot.
-                n_keys++;
+                if(n_keys < max_n_keys-1) n_keys++;
+                else{ full = true; return false;}
                 return true;
             }
         }
     } 
     full = true;
-    return false; // split bucket + create new + inc local depth & (or) increase directory size
+    return false;
 }
 
 bool Bucket::find(int key){
@@ -55,7 +56,17 @@ bool Bucket::remove(int key){
      else return false; // if nothing is found, return false
 }
 
-void Bucket::print(){
+int Bucket::pop(){
+    if(n_keys >=0){
+        full = false;
+        int pop_value = key_array[n_keys]; // store pop value
+        key_array[n_keys] = -1; // clear slot of popped value in array
+        if(n_keys > 0) n_keys--; // dont decrement pass 0
+        return pop_value; 
+    } else return -1; // negative return value means array is empty
+}
+
+void Bucket::print_keys(){
     // cout << "max size: " << max_n_keys << endl;
     cout << "[";
     for(int i=0; i < max_n_keys; i++){
@@ -64,5 +75,5 @@ void Bucket::print(){
 
         if(i < (max_n_keys-1)) {cout << ",";}
     }
-    cout << "] (" << l_depth << ')' << endl;
+    cout << "] (" << l_depth << ")";
 }

@@ -9,9 +9,10 @@ class ExtensibleHashTable
   private:
     int n_buckets;
     int hash_function(int key); // takes an input key as an input, calculates and returns hash index value (int) using global depth.
-    bool bucket_exists(int hash_value); // if bucket exists, return true, else return false;
-    void create_new_bucket(int key);
-    void insert_key(int key);
+    void create_new_bucket(int key, int local_depth=1);
+    void insert_key(int key); // inserts key in bucket. Helper function for insert, to reduce redudant code.
+    void split_buckets(int key); // splits buckets, re-distibutes values, increments local depth.
+    int insertion_scenario(int key); // determines what sort of processes must occur for insertion to happen successfully
 
   public:
     /* Constructors and Destructor */
@@ -20,7 +21,7 @@ class ExtensibleHashTable
     ~ExtensibleHashTable(); // Destructor.
 
     /* Insertion/removal functions */
-    void insert( int key );
+    void insert( int key, int local_depth = 1 );
     bool remove( int key ); // searches for key; if found, removes all values & duplicates from table; returns true if the key was found and removed, else false 
 
     /* Search functions */

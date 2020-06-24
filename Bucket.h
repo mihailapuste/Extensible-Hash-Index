@@ -16,13 +16,15 @@ class Bucket
     
         /* Insertion/removal functions */
         bool insert( int key );
-        bool remove( int key ); 
+        bool remove( int key ); // removes all instances of key found in bucket
+        int pop(); // pops rightmost and returns key in array.
+
 
         /* Search functions */
         bool find( int key ); // searches bucket for key; found returns true, else returns false
 
         /* Print functions */
-        void print();
+        void print_keys();
 
         /* Public variables */
         int l_depth; // local depth
