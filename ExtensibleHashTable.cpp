@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Bucket *buckets[0];
+Bucket *buckets[1];
 
 ExtensibleHashTable::ExtensibleHashTable(int b_size){ // constructor
     bucket_size = b_size;
@@ -59,6 +59,13 @@ void ExtensibleHashTable::insert(int key , int local_depth){
             increase_directory();
             split_buckets(key);
             break;
+        
+        case 4: /* SCENARIO [4]: Directory of hash value points to bucket of other directory, but does not have its own bucket */
+            
+            cout << endl <<  "--CREATING BUCKET [" << hash_function(key) << "] WITH LOCAL DEPTH: ["<<local_depth<<"]--"<< endl;
+            create_new_bucket(key, local_depth);
+            insert_key(key);
+            break;
 
     }
   
@@ -68,14 +75,15 @@ void ExtensibleHashTable::insert(int key , int local_depth){
 
 void ExtensibleHashTable::increase_directory(){
     global_depth++;
-
-    size_t newSize = pow(2, global_depth);
-    int* newArr = new int[newSize];
-
-    memcpy( newArr, entries, n_buckets * sizeof(int) );
-
-    delete [] entries;
-    entries = newArr;
+    int index_size = pow(2, global_depth);
+    int prev_index_size = index_size/2;
+    cout << endl <<  "--INCREASING DIRECTORY FROM " << prev_index_size << " --> "<< index_size << endl;
+    
+    for(int i=0; i < prev_index_size; i++){ // dont do for index = 1
+         cout << i << ": " << i+prev_index_size <<endl;
+         buckets[i+prev_index_size] = buckets[i];
+    }
+    cout << endl;
 
     return;
 }
@@ -102,6 +110,11 @@ void ExtensibleHashTable::split_buckets(int key){
 
 int ExtensibleHashTable::insertion_scenario(int key){
     int hash_value = hash_function(key);
+
+    /* SCENARIO [4]: Directory of hash value points to bucket of other directory, but does not have its own bucket */
+    if(buckets[hash_value] && hash_value != buckets[hash_value]->index){
+        return 4; // create a new bucket using at index of hash value.
+    }
 
     /* SCENARIO [1]: Bucket exists and NOT full. */
     if(buckets[hash_value] && !buckets[hash_function(key)]->full){ 
@@ -136,8 +149,7 @@ void ExtensibleHashTable::insert_key(int key){
 
 void ExtensibleHashTable::create_new_bucket(int key, int local_depth){ 
     int hash_value = hash_function(key);
-    buckets[hash_value] = new Bucket(bucket_size,local_depth );
-    entries[n_buckets] = hash_value;
+    buckets[hash_value] = new Bucket(bucket_size, local_depth, hash_value);
     n_buckets++;
 }
 
@@ -168,12 +180,12 @@ int ExtensibleHashTable::hash_function(int key){
 void ExtensibleHashTable::print(){ 
     cout << endl;
     for(int i=0; i < pow(2, global_depth); i++){
-        cout << i << ": ";
-        if(buckets[i]){
-            cout << buckets[i] << " --> ";
+        cout << i << ": " << buckets[i] << " --> ";
+        if(i == buckets[i]->index){
             buckets[i]->print_keys();
-            
         }
+            // cout << " index:  "<<buckets[i]->index;
+        
         cout << endl;
     }
 }

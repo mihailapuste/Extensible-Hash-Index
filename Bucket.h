@@ -10,7 +10,7 @@ class Bucket
 
     public:
         Bucket() {}; // default constructor
-        Bucket(int max_array_size, int local_depth=1); // Constructor
+        Bucket(int max_array_size, int local_depth=1, int index_value = 0); // Constructor
         // Bucket( const Bucket& bp ); // Copy constructor.
         ~Bucket(); // Destructor
     
@@ -29,6 +29,7 @@ class Bucket
         /* Public variables */
         int l_depth; // local depth
         bool full;
+        int index; // value of pointer's index
         int n_keys; // keeps track of number of keys currently in bucket.
 
     private:

@@ -5,8 +5,9 @@
 
 using namespace std;
 
-Bucket::Bucket(int max_array_size, int local_depth){ // constructor
+Bucket::Bucket(int max_array_size, int local_depth, int index_value){ // constructor
     full = false;
+    index = index_value; // assign the index value to the bucket index to be referenced by the hash table.
     max_n_keys = max_array_size; // set the max array/bucket size.
     key_array = new int[max_n_keys - 1]; // point key_array pointer to newly initialized integer array for bucket.
     for (int i=0; i<max_n_keys; i++) {
