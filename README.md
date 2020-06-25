@@ -1,4 +1,4 @@
-# CMPT-454 | Assignment-2 | CPP Hash index
+C++ Hash index
 
 ### Description
 
